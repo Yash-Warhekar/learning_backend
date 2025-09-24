@@ -1,7 +1,7 @@
 {
   "name": "4express",
   "version": "1.0.0",
-  "main": "app.js",
+  "main": "handleerror.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
