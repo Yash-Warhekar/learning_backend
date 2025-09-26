@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>home</title>
+       <style>
+        button {
+        background-color: #6df4e9;
+        border: none;
+        color: white;
+        padding: 15px 32px;
+        text-align: center;
+        text-decoration: none;
+        display: inline-block;
+        font-size: 16px;
+        margin: 4px 2px;
+        cursor: pointer;
+}
+    </style>
+</head>
+<body>
+    <nav style="display: flex; gap: 50%;">
+        <span><h2>Khatabook</h2></span>
+
+        <span>
+             <button ><a href="/create">+</a></button>
+             <button><a href="/">Home</a></button>
+        </span>
+
+    </nav>
+    
+    <% files.forEach(function(file){  %>
+        <h3><%=file%></h3>
+        <a href="/edit/<%=file%>">Edit</a>
+        <a href="/delete/<%=file%>">Delete</a>
+    <% })%>
+</body>
+</html>
