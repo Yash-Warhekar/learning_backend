@@ -1,39 +1,123 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>home</title>
-       <style>
-        button {
-        background-color: #6df4e9;
-        border: none;
-        color: white;
-        padding: 15px 32px;
-        text-align: center;
-        text-decoration: none;
-        display: inline-block;
-        font-size: 16px;
-        margin: 4px 2px;
-        cursor: pointer;
-}
-    </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Khaatabook</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      background: #fff;
+    }
+
+    /* Navbar */
+    .navbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 15px 30px;
+      background: #fff;
+      border-bottom: 1px solid #ddd;
+    }
+    .navbar .logo {
+      font-size: 18px;
+      font-weight: bold;
+    }
+    .navbar .links a {
+      margin-left: 20px;
+      text-decoration: none;
+      color: black;
+      font-size: 14px;
+    }
+
+    /* Content */
+    .container {
+      padding: 30px;
+    }
+    h3 {
+      margin-bottom: 20px;
+    }
+
+    /* Hisaab List */
+    .list {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+    .list-item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: #007bff;
+      color: white;
+      padding: 10px 15px;
+      border-radius: 5px;
+      width: 200px;
+    }
+    .list-item span {
+      font-weight: bold;
+    }
+
+    /* Icons */
+    .icons {
+      display: flex;
+      gap: 10px;
+    }
+    .icons button {
+      background: white;
+      border: none;
+      border-radius: 50%;
+      width: 28px;
+      height: 28px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      font-size: 14px;
+    }
+    .icons button:hover {
+      opacity: 0.8;
+    }
+  </style>
 </head>
 <body>
-    <nav style="display: flex; gap: 50%;">
-        <span><h2>Khatabook</h2></span>
+  <!-- Navbar -->
+  <div class="navbar">
+    <div class="logo">Todo App</div>
+    <div class="links">
+      <a href="/">Home</a>
+      <a href="/create">Create New Todos</a>
+    </div>
+  </div>
 
-        <span>
-             <button ><a href="/create">+</a></button>
-             <button><a href="/">Home</a></button>
-        </span>
+  <!-- Content -->
+  <div class="container">
+    <h3>All Hisaab Todos</h3>
 
-    </nav>
-    
-    <% files.forEach(function(file){  %>
-        <h3><%=file%></h3>
-        <a href="/edit/<%=file%>">Edit</a>
-        <a href="/delete/<%=file%>">Delete</a>
-    <% })%>
+    <% if (files.length > 0){ %>
+            <% files.forEach(function(file){ %>
+                  <!-- List -->
+              <div class="list">
+                <div class="list-item">
+                  <span><%= file %></span>
+                  <div class="icons">
+                    <button title="View"><a href="/show/<%=file%>">👁</a></button>
+                    <button title="Edit"><a href="/edit/<%=file%>">✏️</a></button>
+                    <button title="Delete"><a href='/delete/<%=file%>'>🗑</a></button>
+                  </div>
+                </div>
+
+
+           <% }) %>
+   <% }else{ %>
+      <h5>Currently nothing to show, Create Todos</h5>
+    <%}%>
+ 
+
+
+    </div>
+  </div>
 </body>
 </html>

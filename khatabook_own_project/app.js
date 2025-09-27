@@ -1,73 +1,64 @@
 const express=require('express')
+const { fstat } = require('fs')
+const app=express()
 const path=require('path')
 const fs=require('fs')
-const app=express()
 
 
-// important boilerpalate
 app.set('view engine','ejs')
-app.use(express.static(path.join(__dirname,'public')));
 app.use(express.json())
 app.use(express.urlencoded({extended:true}))
+app.use(express.static(path.join(__dirname,'public')))
 
 
-// my main route
-app.get('/',function(req,res){
-   fs.readdir(`./files`,function(err,files){
-    res.render('index',{files})
-   })
-})
-
-
-
-// route for creating file
-app.get('/create',function(req,res){
-    const currdate=new Date();
-    const day=String(currdate.getDate()).padStart(2,'0')
-    const month=String(currdate.getMonth()+1).padStart(2,'0')
-    const year=currdate.getFullYear()
-
-    const today=`${day}-${month}-${year}.txt`
-    if (fs.existsSync(`./files/${today}`)){
-        console.log('already exists')
-        res.redirect('/')
-    }else{
-        fs.writeFile(`./files/${today}`,'default data',(err,data)=>{
-        if(err)res.send('something went wrong')
-        console.log('created')    
-        res.redirect(`/edit/${today}`)
-    })
-    }
-    
-})
-
-
-// route for viewing file
-app.get('/edit/:filename',function(req,res){
-    fs.readFile(`./files/${req.params.filename}`,'utf-8',(err,data)=>{
-        if(err) return res.send(err)
-        res.render('edit',{data,filename:req.params.filename})    
+app.get('/',(req,res)=>{
+    fs.readdir('./todos',function(err,files){
+        if (err) return res.status(500).send(err)
+        res.render('index',{files:files})
     })
 })
 
-//same route for updating file
-app.post('/update/:filename',function(req,res){
-    fs.writeFile(`./files/${req.params.filename}`,req.body.editedhisab,(err)=>{
-        if(err) return res.send(err)
+app.get('/create',(req,res)=>{
+    res.render('create')
+})
+
+app.post('/createtodo',(req,res)=>{
+    fs.writeFile(`./todos/${req.body.title}`,req.body.content,(err)=>{
+        if (err) return res.send(err)
+        console.log("created/updated file(b/c=using same route for both)")
         res.redirect('/')
     })
 })
 
-//deleting file
-app.get('/delete/:filename',function(req,res){
-    fs.unlink(`./files/${req.params.filename}`,(err)=>{
-        if(err) return res.send(err)
-        res.redirect('/')
+app.get('/edit/:filename',(req,res)=>{
+    const filename=req.params.filename
+    fs.readFile(`./todos/${filename}`,'utf-8',(err,data)=>{
+        if (err) return res.status(500).send(err)
+        console.log(`updating ${filename}`)    
+        res.render('edit',{filename:filename,data})
     })
 })
 
 
+app.get('/show/:filename',(req,res)=>{
+    const filename=req.params.filename
+    fs.readFile(`./todos/${filename}`,'utf-8',(err,data)=>{
+        if (err) return res.status(500).send(err)
+        console.log(`updating ${filename}`)    
+        res.render('hisab',{filename:filename,data})
+    })
+})
+
+
+
+app.get('/delete/:filename',(req,res)=>{
+    const filename=req.params.filename
+    fs.unlink(`./todos/${filename}`,(err)=>{
+        if (err) return res.status(500).send(err)
+        res.redirect('/')    
+    })
+})
 
 app.listen(3000,()=>{
-    console.log("listning on port 3000")
+    console.log('listening on port 3000')
 })

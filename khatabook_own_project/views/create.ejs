@@ -24,20 +24,25 @@
             margin-left: 24px;
         }
         .container {
-            max-width: 600px;
-            margin: 45px auto;
+            max-width: 500px;
+            margin: 40px auto;
             background: #fff;
-            padding: 20px 40px 40px 40px;
+            padding: 40px;
             border-radius: 6px;
             box-shadow: 0 4px 16px rgba(0,0,0,0.04);
         }
-        .info-text {
-            font-size: 16px;
-            margin-bottom: 16px;
+        h3 {
+            font-size: 18px;
+            margin-bottom: 18px;
         }
-        .info-text a {
-            color: #007aff;
-            text-decoration: underline;
+        input[type="text"] {
+            width: 100%;
+            padding: 10px;
+            border-radius: 4px;
+            border: 1px solid #eee;
+            margin-bottom: 18px;
+            font-size: 15px;
+            background: #fafafa;
         }
         textarea {
             width: 100%;
@@ -66,22 +71,18 @@
 </head>
 <body>
     <div class="navbar">
-        <div class="navbar-left">Todo App</div>
+        <div class="navbar-left">Todo App <div>
         <div class="navbar-right">
-            <a href="#">Home</a>
-            <a href="#">Create New Todo</a>
+            <a href="/">Home</a>
+            <a href="/create">Create New Todos</a>
         </div>
     </div>
     <div class="container">
-        <div class="info-text">
-            You're editing todo  
-            <a href="#"><%=filename%></a>
-            date
-        </div>
-        <form method="post" action="/createtodo">
-            <input type="hidden" name="title" value="<%= filename %>">
-            <textarea name="content"><%=data%></textarea>
-            <button type="submit">Update Todo</button>
+        <h3>Create New Todo</h3>
+        <form action="/createtodo" method="post">
+            <input type="text" name="title" placeholder="Enter your Todos..." />
+            <textarea name="content" placeholder="plan your day...."></textarea>
+            <button type="submit">Create New Todo</button>
         </form>
     </div>
 </body>
