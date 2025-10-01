@@ -7,15 +7,12 @@ const {adminAuth,userAuth}=require('./middleware')
 app.use('/admin',adminAuth)
 
 const  excludedpath=['/login','/signup']
-
 app.use('/user',(req,res,next)=>{
     if (excludedpath.includes(req.path)){
         console.log(req.path)
         return next()
     }
-    else{
         userAuth(req,res,next);
-    }
 })
 
 
@@ -51,6 +48,12 @@ app.get('/admin/getData',(req,res)=>{
 
 app.get('/admin/deleteuser',(req,res)=>{
     res.send('delete user')
+})
+
+app.use('/',(err,req,res,next)=>{
+    if (err){
+        res.status(404).send('Something went wrong')
+    }
 })
 
 app.listen(5555,()=>{
