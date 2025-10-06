@@ -22,6 +22,43 @@ app.post('/signup',async (req,res)=>{
 
 
 
+//get user by email on /user
+app.get('/user',async(req,res)=>{
+  
+    const useremail=req.body.emailId
+    console.log(useremail)
+
+    try{
+        const user = await User.findOne({ emailId: useremail });
+        if (!user){
+            res.send('no user found with this email')
+        }
+        res.send(user)
+        
+        
+    }catch(err){
+        res.status(400).send('error finding user')
+    }
+})
+
+
+
+//get all users on /feed
+app.get('/feed',async(req,res)=>{
+
+    try{
+        const user=await User.find({})
+        if (user.length <=0 ){
+            res.send('currently no user made')
+        }
+        res.send(user)
+    }catch(err){
+        res.status(400).send('error finding user')
+    }
+})
+
+
+
 
 
 
