@@ -15,7 +15,7 @@ app.post('/signup',async (req,res)=>{
         console.log('user saved')
         res.send(`user saved successfully of ${req.body.firstName}`)
     }catch(err){
-        res.status(400).send('err saving user to db'+err.message)
+        res.status(400).send('err saving user to db '+err.message)
     }
     
 })
@@ -56,6 +56,34 @@ app.get('/feed',async(req,res)=>{
         res.status(400).send('error finding user')
     }
 })
+
+//delete user by id
+app.delete('/user',async (req,res)=>{
+    const userid=req.body.userId
+ 
+    try{
+        const user=await User.findByIdAndDelete(userid)
+        res.send('user deleted successfully')
+    }catch(err){
+        res.status(400).send('err deleting user'+err.message)
+    }
+})
+
+
+
+app.patch('/user',async (req,res)=>{
+    const userbody=req.body
+    const userid=req.body.userId
+    console.log(userbody)
+ 
+    try{
+        const user=await User.findByIdAndUpdate({_id:userid},userbody,{runValidators:true})
+        res.send('user updated successfully')
+    }catch(err){
+        res.status(400).send('err updating user'+err.message)
+    }
+})
+
 
 
 
