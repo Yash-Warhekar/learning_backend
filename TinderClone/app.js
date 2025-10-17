@@ -81,7 +81,7 @@ app.patch('/user/:userId',async (req,res)=>{
     // if (userbody)
 
     try{
-        const ALLOWED_UPDATES=["firstName","lastName","password","age", "gender"]
+        const ALLOWED_UPDATES=["firstName","lastName","password","age", "gender","skills"]
 
     const isAllowed = Object.keys(userbody).every((k) => {
      return ALLOWED_UPDATES.includes(k);
@@ -94,7 +94,7 @@ app.patch('/user/:userId',async (req,res)=>{
         const user=await User.findByIdAndUpdate({_id:userid},userbody,{runValidators:true,new:true})
 
         if(!user) return res.status(404).send('user not found')
-            
+
         res.send('user updated successfully')
     }catch(err){
         res.status(400).send('err updating user'+err.message)

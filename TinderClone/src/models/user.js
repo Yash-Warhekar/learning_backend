@@ -41,16 +41,16 @@ const userSchema=new Schema({
             }
         }
     },
-    // skills:{
-    //     type:[String],
-    //     validate: {
-    //     validator: function (arr) {
-    //         return arr.length>=10
-    //         },
-    //     message: 'Tags must be non-empty strings.'
-    //     },
-    //     default: []
-    // }
+    skills:{
+        type:[String],
+        validate: {
+        validator: function (arr) {
+            return arr.length<=10
+            },
+        message:"only 10 skills are allowed."
+        },
+        default: []
+    }
 },{timestamps:true})
 
 
