@@ -71,13 +71,30 @@ app.delete('/user',async (req,res)=>{
 
 
 
-app.patch('/user',async (req,res)=>{
+app.patch('/user/:userId',async (req,res)=>{
     const userbody=req.body
-    const userid=req.body.userId
-    console.log(userbody)
- 
+    const userid=req.params?.userId
+    console.log(userid)
+
+
+    
+    // if (userbody)
+
     try{
-        const user=await User.findByIdAndUpdate({_id:userid},userbody,{runValidators:true})
+        const ALLOWED_UPDATES=["firstName","lastName","password","age", "gender"]
+
+    const isAllowed = Object.keys(userbody).every((k) => {
+     return ALLOWED_UPDATES.includes(k);
+    });
+
+    if (!isAllowed){
+        throw new Error(' : Update denied')
+        
+    }
+        const user=await User.findByIdAndUpdate({_id:userid},userbody,{runValidators:true,new:true})
+
+        if(!user) return res.status(404).send('user not found')
+            
         res.send('user updated successfully')
     }catch(err){
         res.status(400).send('err updating user'+err.message)
