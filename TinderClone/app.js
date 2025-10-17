@@ -58,8 +58,8 @@ app.get('/feed',async(req,res)=>{
 })
 
 //delete user by id
-app.delete('/user',async (req,res)=>{
-    const userid=req.body.userId
+app.delete('/user/:userId',async (req,res)=>{
+    const userid=req.params?.userId
  
     try{
         const user=await User.findByIdAndDelete(userid)

@@ -1,6 +1,7 @@
 const mongoose=require('mongoose')
-
+const validator=require('validator')
 const {Schema}=mongoose
+
 
 
 //creating user schema
@@ -20,11 +21,21 @@ const userSchema=new Schema({
         unique:true,
         required:true,
         lowercase:true,
-        trim:true
+        trim:true,
+        validate(value){
+            if (!validator.isEmail(value)){
+                throw new Error('invalid email '+ value)
+            }
+        },
     },
     password:{
         type:String,
-        required: true
+        required: true,
+        validate(val){
+            if(!validator.isStrongPassword(val)){
+                throw new Error('password is not strong '+val)
+            }
+        }
     },
     age:{
         type:Number,
@@ -40,6 +51,14 @@ const userSchema=new Schema({
                 
             }
         }
+    },
+    profile:{
+        type:String,
+         validate(value){
+            if (!validator.isURL(value)){
+                throw new Error('invalid url '+ value)
+            }
+        },
     },
     skills:{
         type:[String],
