@@ -1,16 +1,28 @@
 const express=require('express')
-
+const {signupValidator}=require('./src/utils/validator')
+const bcrypt = require('bcrypt');
 const app=express()
 const {connectDB}=require('./src/config/database')
 
 const {User}=require('./src/models/user')
 
+
 app.use(express.json());
 
 app.post('/signup',async (req,res)=>{
-    const newuser=new User(req.body)
+try{
+    // validate the req.body
+    signupValidator(req);
 
-    try{
+    //encrypt the password
+    const {password}=req.body.password;
+
+    const hashedPass=await bcrypt.hash(password, 10);
+    console.log(hashedPass)
+
+    //make instance of user for saving in DB
+    const newuser=new User({firstName:req.body.firstName,lastName:req.body.lastName,emailId:req.body.emailId,password:hashedPass})
+
         await newuser.save()
         console.log('user saved')
         res.send(`user saved successfully of ${req.body.firstName}`)
