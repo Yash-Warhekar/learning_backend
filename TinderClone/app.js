@@ -3,7 +3,7 @@ const {signupValidator}=require('./src/utils/validator')
 const bcrypt = require('bcrypt');
 const app=express()
 const {connectDB}=require('./src/config/database')
-
+const validator=require('validator')
 const {User}=require('./src/models/user')
 
 
@@ -30,6 +30,36 @@ try{
         res.status(400).send('err saving user to db '+err.message)
     }
     
+})
+
+
+//login api for user login
+app.post('/login',async(req,res)=>{
+    try{
+        //read the body
+        const {emailId,password}=req.body
+        //validate the email
+        if(!validator.isEmail(emailId)){
+                throw new Error('invalid Email')
+            }
+        //check if email is present in db
+        const user=await User.findOne({emailId:emailId})
+        if (!user){
+            throw new Error('Invalid Credentials')
+        }
+        //check if entered password is correct
+        const ifUserExists=await bcrypt.compare(password,user.password)
+
+        //if yes return login success
+        if (ifUserExists){
+            res.send('Login Successful')
+        }else{
+        //else throw new error :password incorrect
+            throw new Error('Invalid Credentials')        
+    }
+    }catch(err){
+        res.status(400).send('Error '+err.message)
+    }
 })
 
 
