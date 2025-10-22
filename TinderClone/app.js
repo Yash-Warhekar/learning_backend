@@ -1,14 +1,19 @@
 const express=require('express')
 const {signupValidator}=require('./src/utils/validator')
 const bcrypt = require('bcrypt');
-const app=express()
+var cookieParser = require('cookie-parser')
 const {connectDB}=require('./src/config/database')
 const validator=require('validator')
 const {User}=require('./src/models/user')
+const jwt=require('jsonwebtoken')
 
+const app=express()
 
 app.use(express.json());
+app.use(cookieParser())
 
+
+//singup api for new user
 app.post('/signup',async (req,res)=>{
 try{
     // validate the req.body
@@ -52,6 +57,10 @@ app.post('/login',async(req,res)=>{
 
         //if yes return login success
         if (ifUserExists){
+            //create jwt token
+            const token=jwt.sign({_id:user._id},"andupandugandu!@#$123")
+            //add token to cookie and sent it to user
+            res.cookie("token",token)
             res.send('Login Successful')
         }else{
         //else throw new error :password incorrect
@@ -62,7 +71,33 @@ app.post('/login',async(req,res)=>{
     }
 })
 
+// get profile of user by jwt
+app.get('/profile',async (req,res)=>{
+    try{
+    // get cookies for token
+    const cookies= req.cookies;
+    const {token}=cookies
+    
+    if(!token){
+        throw new Error('invalid token')
+    }
 
+    // validate this token
+    const decodedtoken=await jwt.verify(token,"andupandugandu!@#$123")  //gives object 
+    const {_id}=decodedtoken  //extract our encoded data
+
+    //find user in db by _id
+    const user=await User.findById({_id:_id})
+
+    if(!user){
+        throw new Error('Please login again')
+    }
+    res.send(user)
+}catch(err){
+        res.status(400).send('Error '+err.message)
+    }
+    
+})
 
 //get user by email on /user
 app.get('/user',async(req,res)=>{
