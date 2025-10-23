@@ -59,9 +59,9 @@ app.post('/login',async(req,res)=>{
         //if yes return login success
         if (ifUserExists){
             //create jwt token
-            const token=jwt.sign({_id:user._id},"andupandugandu!@#$123")
+            const token=jwt.sign({_id:user._id},"andupandugandu!@#$123",{expiresIn:'1d'})
             //add token to cookie and sent it to user
-            res.cookie("token",token)
+            res.cookie("token",token,{expires:new Date(Date.now() + 24*3600000)})
             res.send('Login Successful')
         }else{
         //else throw new error :password incorrect
