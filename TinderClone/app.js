@@ -6,6 +6,7 @@ const {connectDB}=require('./src/config/database')
 const validator=require('validator')
 const {User}=require('./src/models/user')
 const jwt=require('jsonwebtoken')
+const {userAuth}=require('./src/middlewares/auth')
 
 const app=express()
 
@@ -72,26 +73,11 @@ app.post('/login',async(req,res)=>{
 })
 
 // get profile of user by jwt
-app.get('/profile',async (req,res)=>{
+app.get('/profile',userAuth,async (req,res)=>{
     try{
-    // get cookies for token
-    const cookies= req.cookies;
-    const {token}=cookies
-    
-    if(!token){
-        throw new Error('invalid token')
-    }
 
-    // validate this token
-    const decodedtoken=await jwt.verify(token,"andupandugandu!@#$123")  //gives object 
-    const {_id}=decodedtoken  //extract our encoded data
-
-    //find user in db by _id
-    const user=await User.findById({_id:_id})
-
-    if(!user){
-        throw new Error('Please login again')
-    }
+    const user=req.user
+    console.log(user)
     res.send(user)
 }catch(err){
         res.status(400).send('Error '+err.message)
