@@ -17,18 +17,20 @@ app.use(cookieParser())
 //singup api for new user
 app.post('/signup',async (req,res)=>{
 try{
+   
     // validate the req.body
     signupValidator(req);
 
     //encrypt the password
-    const {password}=req.body.password;
+    const {password}=req.body;
+
 
     const hashedPass=await bcrypt.hash(password, 10);
-    console.log(hashedPass)
+    
 
     //make instance of user for saving in DB
     const newuser=new User({firstName:req.body.firstName,lastName:req.body.lastName,emailId:req.body.emailId,password:hashedPass})
-
+    // console.log(newuser)
         await newuser.save()
         console.log('user saved')
         res.send(`user saved successfully of ${req.body.firstName}`)
@@ -54,14 +56,15 @@ app.post('/login',async(req,res)=>{
             throw new Error('Invalid Credentials')
         }
         //check if entered password is correct
-        const ifUserExists=await bcrypt.compare(password,user.password)
-
+        const ifUserExists=await user.validatePassword(password)
         //if yes return login success
         if (ifUserExists){
             //create jwt token
-            const token=jwt.sign({_id:user._id},"andupandugandu!@#$123",{expiresIn:'1d'})
+            const token=await user.getjwt()
+            console.log(token)
+
             //add token to cookie and sent it to user
-            res.cookie("token",token,{expires:new Date(Date.now() + 24*3600000)})
+            res.cookie("token",token,{expires:new Date(Date.now() + 8*3600000)})
             res.send('Login Successful')
         }else{
         //else throw new error :password incorrect
