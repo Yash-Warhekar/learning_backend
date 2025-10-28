@@ -5,7 +5,7 @@ const userAuth = async function (req,res,next){
    // get cookies for token
    const {token}=req.cookies
    if(!token){
-    throw new Error('Invalid token!!!!!!!')
+    return res.status(401).json({error:"invalid token"})
    }
 
    // validate this token
@@ -16,7 +16,7 @@ const userAuth = async function (req,res,next){
    const user=await User.findById({_id:_id})
 
    if(!user){
-    throw new Error('Please Login again!!')
+     return res.status(401).json({error:"invalid token"})
    }
    req.user=user;
    next();
