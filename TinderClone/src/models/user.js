@@ -62,6 +62,10 @@ const userSchema=new Schema({
             }
         },
     },
+    about:{
+        type:String,
+        default:'this is default about user'
+    },
     skills:{
         type:[String],
         validate: {

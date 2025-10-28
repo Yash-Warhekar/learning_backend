@@ -20,4 +20,12 @@ const signupValidator=(req)=>{
     }
 }
 
-module.exports={signupValidator}
+const validateProfileUpdate=function(req){
+    canupdate=['firstName','lastName','age','gender','profile','about','skills']
+    userinputfields=req.body
+    const isupdateallwed=Object.keys(userinputfields).every((key)=>canupdate.includes(key));
+    
+    return isupdateallwed;
+}
+
+module.exports={signupValidator,validateProfileUpdate}

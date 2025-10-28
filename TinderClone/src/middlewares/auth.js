@@ -5,7 +5,7 @@ const userAuth = async function (req,res,next){
    // get cookies for token
    const {token}=req.cookies
    if(!token){
-    return res.status(401).json({error:"invalid token"})
+    return res.status(401).json({error:"invalid token",message:"Please login Again"})
    }
 
    // validate this token
