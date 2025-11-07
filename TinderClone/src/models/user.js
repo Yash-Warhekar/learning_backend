@@ -83,6 +83,10 @@ const userSchema=new Schema({
 },{timestamps:true})
 
 
+//index
+userSchema.index({firstName:1, lastName:1})
+
+
 //some helper user method
 //1.for genrating jwt token
 userSchema.methods.getjwt=async function(){

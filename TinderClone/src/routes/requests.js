@@ -24,7 +24,7 @@ requestsRouter.post(
         //     message: 'You cannot send a connection request to yourself',
         // });
         // }
-        const  allowedStatus=['ignored','interested']
+        const  allowedStatus=['ignore','interested']
 
         if(!allowedStatus.includes(status)){
             return res
@@ -65,9 +65,9 @@ requestsRouter.post(
         });
 
         const data=await conectioRequest.save()
-
+        
         res.json({
-            message:"conection Request sent Successfully",
+            message:req.user.firstName+" " +status+"'s "+ touser.firstName,
             data
         })
 
