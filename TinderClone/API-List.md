@@ -8,14 +8,17 @@
 ##profileRouter
 -get /profile/view
 -patch /profile/user
--patch /profile/password
+-patch /profile/password    update_password
 
 ##ConnectRequestRouter
--post /request/interested/:userid
--post /request/ignored/:userid
+-post /request/send/interested/:userid
+-post /request/send/ignored/:userid
+
+
 -post /request/review/accepted/:userid
 -post /request/review/rejected/:userid
 
+status:ignore,interested,accepted,rejected
 
 ##userRouter
 -get /user/connections

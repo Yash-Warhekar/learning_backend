@@ -47,12 +47,16 @@ const userSchema=new Schema({
     gender:{
         type:String,
         lowercase:true,
-        validate(value){
-            if(!['male','female','others'].includes(value)){
-                throw new Error('enter valid gender')
+        enum:{
+            values:['male','female','others'],
+            message:`{VALUE} is not valid gender type`
+        },
+        // validate(value){
+        //     if(!['male','female','others'].includes(value)){
+        //         throw new Error('enter valid gender')
                 
-            }
-        }
+        //     }
+        // }
     },
     profile:{
         type:String,

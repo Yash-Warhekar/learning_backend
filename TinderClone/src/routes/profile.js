@@ -22,22 +22,28 @@ profileRouter.get('/profile/view',userAuth,async (req,res)=>{
 //update profile of user
 profileRouter.patch('/profile/edit',userAuth,async(req,res)=>{
     try{
+        //check if input fields are valid
         if(!validateProfileUpdate(req)){
         throw new Error('invalid edit request')}
 
+        // logged in user from middleware
         const loggeduser=req.user
-        console.log(loggeduser)
+       
+        //update fields
         Object.keys(req.body).forEach((key)=>{
             loggeduser[key]=req.body[key]
         })
-        console.log(loggeduser)
+        
+        // save to db
         await loggeduser.save()
-        res.send(`${loggeduser.firstName} , your profile updated successfully`)
-
+        res.json({message:"profile updated successfully",updatedData:loggeduser})
 
 }catch(err){
     res.status(400).send('Error: '+err.message)
 }
 })
+
+
+//create api for forgot password patch  /profile/password
 
 module.exports=profileRouter;
