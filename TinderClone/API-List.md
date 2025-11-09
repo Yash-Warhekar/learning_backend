@@ -11,12 +11,13 @@
 -patch /profile/password    update_password
 
 ##ConnectRequestRouter
--post /request/send/interested/:userid
--post /request/send/ignored/:userid
+-request/send/status/:userId==>
+{-post /request/send/interested/:userid
+-post /request/send/ignored/:userid}
 
-
--post /request/review/accepted/:userid
--post /request/review/rejected/:userid
+-request/review/:status/:requestId==>
+{-post /request/review/accepted/:userid
+-post /request/review/rejected/:userid}
 
 status:ignore,interested,accepted,rejected
 
