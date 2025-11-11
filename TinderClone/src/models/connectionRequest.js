@@ -3,6 +3,7 @@ const {Schema,model}=mongoose
 const connectionRequestSchema=new Schema({
     fromUserId:{
         type:mongoose.Schema.Types.ObjectId,
+        ref:'User', //reference to user collection(schema)
         required:true
     },
     toUserId:{

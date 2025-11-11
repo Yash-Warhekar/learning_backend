@@ -6,6 +6,7 @@ const app=express()
 const authRouter =require('./src/routes/auth')
 const profileRouter =require('./src/routes/profile')
 const requestsRouter =require('./src/routes/requests')
+const userRouter =require('./src/routes/user')
 
 //middlewares
 app.use(express.json());
@@ -16,6 +17,7 @@ app.use(cookieParser())
 app.use('/',authRouter)
 app.use('/',profileRouter)
 app.use('/',requestsRouter)
+app.use('/',userRouter)
 
 
 
