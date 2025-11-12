@@ -5,8 +5,32 @@ const ConnectionRequestModel = require('../models/connectionRequest');
 
 const userRouter=express.Router();
 
-// -get /user/connections
+const userSavedData='firstName lastName profile age about'
 
+
+// -get /user/connections
+//returns all user connections
+userRouter.get('/user/connections',userAuth,async(req,res)=>{
+    try{
+        const loggedInUser=req.user
+
+        const conectionRequest=await ConnectionRequestModel.find({
+            $or:[
+                {toUserId:loggedInUser._id,status:'accepted'},
+                {fromUserId:loggedInUser._id,status:'accepted'}
+            ]
+        }).populate('fromUserId',userSavedData)
+        
+        if(conectionRequest.length<1){
+            return res.status(404).json({message:'Currently No requests'})
+        }
+        const data=conectionRequest.map((userdata)=>userdata.fromUserId)
+        res.json({data})
+
+    }catch(err){
+        res.status(400).send('Error :'+err.message)
+    }
+})
 
 
 
@@ -21,7 +45,7 @@ userRouter.get('/user/requests/received',userAuth,async(req,res)=>{
         const conectionRequest=await ConnectionRequestModel.find({
             toUserId:loggedInUser._id,
             status:'interested'
-        }).populate('fromUserId','firstName lastName profile age about')
+        }).populate('fromUserId',userSavedData)
         // }).populate('fromUserId',['firstName','lastName'])
 
         if(conectionRequest.length<1){
