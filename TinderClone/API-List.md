@@ -34,3 +34,6 @@ status:ignore,interested,accepted,rejected
 /feed?page=3&limit=10 =>21-30 .skip(20) .limit(10)
 
 making formula for limit=(page-1)*limit
+
+
+Never compare two id's , convert them toString before compairing

@@ -24,10 +24,10 @@ userRouter.get('/user/connections',userAuth,async(req,res)=>{
         .populate('toUserId',userSavedData)
         
         if(conectionRequest.length<1){
-            return res.status(404).json({message:'Currently No requests'})
+            return res.json({message:'Currently No requests'})
         }
         const data=conectionRequest.map((userdata)=>{
-            if(userdata.fromUserId===loggedInUser._id){
+            if(userdata.fromUserId.toString() === loggedInUser._id.toString()){
                 return userdata.toUserId
             }
             return userdata.fromUserId
@@ -83,7 +83,7 @@ userRouter.get('/feed',userAuth,async(req,res)=>{
         const skip=(page-1)*limit;
 
     //get all the connections of either sent/received by user 
-    const connectionRequest=await ConnectionRequestModel.fine({
+    const connectionRequest=await ConnectionRequestModel.find({
         $or:[{fromUserId:loggedInUser._id},{toUserId:loggedInUser._id}]
     }).select('toUserId fromUserId');
 
