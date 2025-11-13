@@ -70,11 +70,17 @@ userRouter.get('/user/requests/received',userAuth,async(req,res)=>{
 
 
 
-
+// /feed?page=1&limit=10 =>0-10 .skip(0) .limit(1000)
 // -get /user/feed - give you the profiles of other users on platform
 userRouter.get('/feed',userAuth,async(req,res)=>{
     try{
         const loggedInUser=req.user
+
+        // for pagenation
+        const page=parseInt(req.query.page)||1;
+        let limit=parseInt(req.query.limit)||10;
+        limit = limit > 50 ? 50 : limit;
+        const skip=(page-1)*limit;
 
     //get all the connections of either sent/received by user 
     const connectionRequest=await ConnectionRequestModel.fine({
@@ -95,7 +101,7 @@ userRouter.get('/feed',userAuth,async(req,res)=>{
             {_id:{$nin:Array.from(hideUserFromFeed)}},
             {_id:{$ne:loggedInUser._id}}
         ]
-    }).select(userSavedData)
+    }).select(userSavedData).skip(skip).limit(limit)  //pagenation using skip and limit
 
     res.send(users)
     }catch(err){
