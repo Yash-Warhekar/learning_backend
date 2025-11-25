@@ -20,11 +20,28 @@ try{
     
 
     //make instance of user for saving in DB
-    const newuser=new User({firstName:req.body.firstName,lastName:req.body.lastName,emailId:req.body.emailId,password:hashedPass})
+    const newuser=new User({
+        firstName:req.body.firstName,
+        lastName:req.body.lastName
+        ,emailId:req.body.emailId,password:hashedPass
+    })
+
     // console.log(newuser)
-        await newuser.save()
-        console.log('user saved')
-        res.send(`user saved successfully of ${req.body.firstName}`)
+    await newuser.save()
+    console.log('user saved')
+
+    //now we will automatically log in the user
+    console.log(newuser._id)
+    // 1.create jwt token
+    const token=await newuser.getjwt()
+    //2.add token to cookie and sent it to user
+    res.cookie("token",token,{expires:new Date(Date.now() + 8*3600000)})
+    //3.done now, send success
+    res.status(201).json({
+        message:`Signup successful. Logged in as ${newuser.firstName}`,
+        newuser
+    })
+
     }catch(err){
         res.status(400).send('err saving user to db '+err.message)
     }
@@ -57,7 +74,7 @@ authRouter.post('/login',async(req,res)=>{
 
             //add token to cookie and sent it to user
             res.cookie("token",token,{expires:new Date(Date.now() + 8*3600000)})
-            res.send('Login Successful')
+            res.send(user)
         }else{
         //else throw new error :password incorrect
             throw new Error('Invalid Credentials')        
@@ -68,7 +85,7 @@ authRouter.post('/login',async(req,res)=>{
 })
 
 
-//logit api for user login
+//logout api for user login
 authRouter.post('/logout',(req,res)=>{
      res.cookie("token",null,{expires:new Date(Date.now())})
      res.send('logged out')

@@ -26,12 +26,14 @@ userRouter.get('/user/connections',userAuth,async(req,res)=>{
         if(conectionRequest.length<1){
             return res.json({message:'Currently No requests'})
         }
-        const data=conectionRequest.map((userdata)=>{
-            if(userdata.fromUserId.toString() === loggedInUser._id.toString()){
-                return userdata.toUserId
-            }
-            return userdata.fromUserId
-        })
+        const data = conectionRequest.map((userdata) => {
+          if (
+            userdata.fromUserId._id.toString() === loggedInUser._id.toString()
+          ) {
+            return userdata.toUserId;
+          }
+          return userdata.fromUserId;
+        });
         res.json({data})
 
     }catch(err){

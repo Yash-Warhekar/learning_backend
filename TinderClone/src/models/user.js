@@ -60,6 +60,7 @@ const userSchema=new Schema({
     },
     profile:{
         type:String,
+        default:'https://static.vecteezy.com/system/resources/previews/013/042/571/original/default-avatar-profile-icon-social-media-user-photo-in-flat-style-vector.jpg',
          validate(value){
             if (!validator.isURL(value)){
                 throw new Error('invalid url '+ value)
