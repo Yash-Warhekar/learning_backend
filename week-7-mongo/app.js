@@ -5,6 +5,9 @@ const jwt=require('jsonwebtoken')
 const {UserModel,TodoModel}=require('./db')
 const  cookieParser =require('cookie-parser')
 const JWT_SECRET='andupandugendu123456'
+const env=require('dotenv')
+
+env.config();
 
 const app=express()
 app.use(express.json())
@@ -15,6 +18,15 @@ app.post('/signup',async (req,res)=>{
     try{
 
         const {name,email,password}=req.body
+
+        const doesExists= await UserModel.find({email})
+        
+        if (doesExists){
+            res.status(400).json({
+                message:'user already exists'
+            })
+        }
+
 
         const passhash=await bcrypt.hash(password,10)
 
@@ -106,6 +118,36 @@ app.get('/todos',auth,async (req,res)=>{
     }
 })
 
+//mark todo as done
+app.post('/todos-mark',auth,async (req,res)=>{
+    try{
+
+        const todoId=req.body.todoId;
+        console.log(todoId)
+        const todo=await TodoModel.find({
+            userId:req.user._id,
+            done:false,
+            _id:todoId
+        })
+        console.log(todo)
+        if(!todo){
+            return res.status(401).json({
+                message:'no todo like this'
+            })
+        }
+
+        await TodoModel.updateOne({_id:todoId},
+            {$set:{done:true}}
+        ).then(()=>{
+            res.status(200).json({
+            todo
+        })
+        })
+
+    }catch(err){
+        console.log(err)
+    }
+})
 
 async function auth(req,res,next){
    try{
@@ -130,7 +172,7 @@ async function auth(req,res,next){
 
 
 async function main(){
-    await mongoose.connect('mongodb+srv://yash2000warhekar:rX7XxucrGn8.uPV@cluster0.fglfdqb.mongodb.net/todo-app')
+    await mongoose.connect(process.env.MONGO_URI)
     .then(()=>console.log('connected to db'))
     .then(()=>{
         app.listen(3000,()=>console.log('listening on port 3000'))

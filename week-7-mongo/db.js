@@ -17,7 +17,7 @@ const userSchema=new Schema({
         type:String,
         required:true
     }
-})
+},{timestamps:{ createdAt: 'created_on', updatedAt: 'modified_on' }})
 
 
 const todoSchema=new Schema({
